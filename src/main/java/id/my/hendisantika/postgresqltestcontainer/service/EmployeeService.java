@@ -59,4 +59,15 @@ public class EmployeeService {
         repository.delete(employee);
         return "Employee with id=" + empId + " removed";
     }
+
+    /**
+     * @return
+     */
+    public String deleteAll() {
+        List<Employee> employees = repository.findAll();
+        if (employees.isEmpty())
+            return "No employees available";
+        repository.deleteAll();
+        return "All employees are removed.";
+    }
 }
