@@ -1,10 +1,17 @@
 package id.my.hendisantika.postgresqltestcontainer.controller;
 
+import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
 import id.my.hendisantika.postgresqltestcontainer.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,4 +29,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class EmployeeController {
 
     private final EmployeeService employeeService;
+
+    @GetMapping(value = "/employees")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public List<EmployeeDTO> employees() {
+        return empoyeeService.employees();
+    }
 }
