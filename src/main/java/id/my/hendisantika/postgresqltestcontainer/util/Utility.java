@@ -5,6 +5,7 @@ import id.my.hendisantika.postgresqltestcontainer.entity.UserInfo;
 import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
 import id.my.hendisantika.postgresqltestcontainer.response.UserInfoDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.NoSuchElementException;
 
@@ -41,5 +42,10 @@ public class Utility {
                 .email(userInfo.getEmail()).roles(userInfo.getRoles()).build();
         log.info("User details : {}", userInfoDTO);
         return userInfoDTO;
+    }
+
+    public static UsernameNotFoundException usernameNotFoundException(String msg) {
+        log.error("{}", msg);
+        return new UsernameNotFoundException(msg);
     }
 }
