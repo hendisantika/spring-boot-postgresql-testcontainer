@@ -1,7 +1,9 @@
 package id.my.hendisantika.postgresqltestcontainer.util;
 
 import id.my.hendisantika.postgresqltestcontainer.entity.Employee;
+import id.my.hendisantika.postgresqltestcontainer.entity.UserInfo;
 import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
+import id.my.hendisantika.postgresqltestcontainer.response.UserInfoDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.NoSuchElementException;
@@ -32,5 +34,12 @@ public class Utility {
 
         log.info("Employee details : {}", employeeDTO);
         return employeeDTO;
+    }
+
+    public static UserInfoDTO mapToUserInfoDTO(UserInfo userInfo) {
+        UserInfoDTO userInfoDTO = UserInfoDTO.builder().id(userInfo.getId()).name(userInfo.getName())
+                .email(userInfo.getEmail()).roles(userInfo.getRoles()).build();
+        log.info("User details : {}", userInfoDTO);
+        return userInfoDTO;
     }
 }
