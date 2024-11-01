@@ -1,10 +1,12 @@
 package id.my.hendisantika.postgresqltestcontainer.service;
 
 import id.my.hendisantika.postgresqltestcontainer.entity.UserInfo;
+import id.my.hendisantika.postgresqltestcontainer.repository.UserInfoRepository;
 import id.my.hendisantika.postgresqltestcontainer.request.UserInfoRequest;
 import id.my.hendisantika.postgresqltestcontainer.response.UserInfoDTO;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -25,20 +28,18 @@ import java.util.Optional;
  * To change this template use File | Settings | File Templates.
  */
 @Component
+@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserInfoService implements UserDetailsService {
 
-    @Autowired
-    private IUserInfoRepository repository;
+    private final UserInfoRepository userInfoRepository;
 
-    @Autowired
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
-    @Autowired
-    private ObservationRegistry registry;
+    private final ObservationRegistry registry;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserInfo> userInfo = repository.findByEmail(username);
+        Optional<UserInfo> userInfo = userInfoRepository.findByEmail(username);
 
         return userInfo.map(UserInfoUserDetails::new)
                 .orElseThrow(() -> Utililty.usernameNotFoundException("Given user not found : " + username));
@@ -50,9 +51,15 @@ public class UserInfoService implements UserDetailsService {
         UserInfo userInfo = UserInfo.builder().name(userInfoRequest.getName()).email(userInfoRequest.getEmail())
                 .password(userInfoRequest.getPassword()).roles(userInfoRequest.getRoles()).build();
 
-//		return repository.save(userInfo);
+//		return userInfoRepository.save(userInfo);
 
         return Observation.createNotStarted("addUser", registry)
-                .observe(() -> Utililty.mapToUserInfoDTO(repository.save(userInfo)));
+                .observe(() -> Utililty.mapToUserInfoDTO(userInfoRepository.save(userInfo)));
+    }
+
+    public List<UserInfoDTO> users() {
+//		return userInfoRepository.findAll();
+        return Observation.createNotStarted("getUsers", registry)
+                .observe(() -> userInfoRepository.findAll().stream().map(Utililty::mapToUserInfoDTO).toList());
     }
 }
