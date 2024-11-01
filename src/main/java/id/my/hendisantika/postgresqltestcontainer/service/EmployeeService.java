@@ -70,4 +70,15 @@ public class EmployeeService {
         repository.deleteAll();
         return "All employees are removed.";
     }
+
+    /**
+     * @param empId
+     * @return
+     */
+    public EmployeeDTO employee(Integer empId) {
+//		Employee employee = repository.findById(empId).orElseThrow(() -> EmployeeUtil.notFound(empId));
+//		return EmployeeUtil.mapToEmployeeDTO(employee);
+        return Observation.createNotStarted("getEmployee", registry).observe(() -> Utililty
+                .mapToEmployeeDTO(repository.findById(empId).orElseThrow(() -> Utililty.notFound(empId))));
+    }
 }
