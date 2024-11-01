@@ -1,6 +1,8 @@
 package id.my.hendisantika.postgresqltestcontainer.service;
 
+import id.my.hendisantika.postgresqltestcontainer.entity.Employee;
 import id.my.hendisantika.postgresqltestcontainer.repository.EmployeeRepository;
+import id.my.hendisantika.postgresqltestcontainer.request.EmployeeRequest;
 import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
@@ -34,6 +36,18 @@ public class EmployeeService {
 //		return repository.findAll().stream().map(EmployeeUtil::mapToEmployeeDTO).toList();
         return Observation.createNotStarted("getEmployees", registry)
                 .observe(() -> employeeRepository.findAll().stream().map(Utililty::mapToEmployeeDTO).toList());
+    }
+
+    /**
+     * @param emp
+     * @return
+     */
+    public EmployeeDTO save(EmployeeRequest emp) {
+        Employee employee = Employee.builder().name(emp.getName()).address(emp.getAddress()).build();
+//		return EmployeeUtil.mapToEmployeeDTO(repository.save(employee));
+
+        return Observation.createNotStarted("saveEmployee", registry)
+                .observe(() -> Utililty.mapToEmployeeDTO(repository.save(employee)));
     }
 
 }
