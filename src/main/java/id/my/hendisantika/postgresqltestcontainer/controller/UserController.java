@@ -1,9 +1,15 @@
 package id.my.hendisantika.postgresqltestcontainer.controller;
 
+import id.my.hendisantika.postgresqltestcontainer.request.UserInfoRequest;
+import id.my.hendisantika.postgresqltestcontainer.response.UserInfoDTO;
 import id.my.hendisantika.postgresqltestcontainer.service.UserInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -22,4 +28,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserInfoService userInfoService;
+
+    @PostMapping(value = "/user")
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserInfoDTO addUser(@RequestBody UserInfoRequest userInfo) {
+        return userInfoService.addUser(userInfo);
+    }
 }
