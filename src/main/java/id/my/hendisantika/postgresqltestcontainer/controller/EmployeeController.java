@@ -1,5 +1,6 @@
 package id.my.hendisantika.postgresqltestcontainer.controller;
 
+import id.my.hendisantika.postgresqltestcontainer.request.EmployeeRequest;
 import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
 import id.my.hendisantika.postgresqltestcontainer.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,4 +47,11 @@ public class EmployeeController {
     public EmployeeDTO employee(@PathVariable(value = "id") Integer empId) {
         return empoyeeService.employee(empId);
     }
+
+    @PostMapping(value = "/employees")
+    @ResponseStatus(HttpStatus.CREATED)
+    public EmployeeDTO save(@RequestBody EmployeeRequest emp) {
+        return empoyeeService.save(emp);
+    }
+
 }
