@@ -50,4 +50,13 @@ public class EmployeeService {
                 .observe(() -> Utililty.mapToEmployeeDTO(repository.save(employee)));
     }
 
+    /**
+     * @param empId
+     * @return
+     */
+    public String delete(Integer empId) {
+        Employee employee = repository.findById(empId).orElseThrow(() -> Utililty.notFound(empId));
+        repository.delete(employee);
+        return "Employee with id=" + empId + " removed";
+    }
 }
