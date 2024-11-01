@@ -1,6 +1,9 @@
 package id.my.hendisantika.postgresqltestcontainer.service;
 
 import id.my.hendisantika.postgresqltestcontainer.entity.UserInfo;
+import id.my.hendisantika.postgresqltestcontainer.request.UserInfoRequest;
+import id.my.hendisantika.postgresqltestcontainer.response.UserInfoDTO;
+import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,6 +42,17 @@ public class UserInfoService implements UserDetailsService {
 
         return userInfo.map(UserInfoUserDetails::new)
                 .orElseThrow(() -> Utililty.usernameNotFoundException("Given user not found : " + username));
+    }
 
+    public UserInfoDTO addUser(UserInfoRequest userInfoRequest) {
+        userInfoRequest.setPassword(encoder.encode(userInfoRequest.getPassword()));
+
+        UserInfo userInfo = UserInfo.builder().name(userInfoRequest.getName()).email(userInfoRequest.getEmail())
+                .password(userInfoRequest.getPassword()).roles(userInfoRequest.getRoles()).build();
+
+//		return repository.save(userInfo);
+
+        return Observation.createNotStarted("addUser", registry)
+                .observe(() -> Utililty.mapToUserInfoDTO(repository.save(userInfo)));
     }
 }
