@@ -3,6 +3,7 @@ package id.my.hendisantika.postgresqltestcontainer.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -41,4 +42,17 @@ public ProblemDetail onNoSuchElement(NoSuchElementException e) throws URISyntaxE
     problemDetail.setTitle("Element Not Found");
     return problemDetail;
 }
+
+    @ExceptionHandler(value = UsernameNotFoundException.class)
+    public ProblemDetail onUsernameNotFoundException(UsernameNotFoundException e) throws URISyntaxException {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+                .getRequest();
+
+        problemDetail.setInstance(new URI(request.getRequestURI()));
+        problemDetail.setType(URI.create("http://api.users.com/errors/username-not-found"));
+        problemDetail.setTitle("User Not Found");
+        return problemDetail;
+    }
 }
