@@ -1,5 +1,7 @@
 package id.my.hendisantika.postgresqltestcontainer.util;
 
+import id.my.hendisantika.postgresqltestcontainer.entity.Employee;
+import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.NoSuchElementException;
@@ -22,5 +24,13 @@ public class Utility {
     public static NoSuchElementException notFound(Integer empId) {
         log.error("Employee with id={} not found.", empId);
         return new NoSuchElementException("Employee with id=" + empId + " not found.");
+    }
+
+    public static EmployeeDTO mapToEmployeeDTO(Employee emp) {
+        EmployeeDTO employeeDTO = EmployeeDTO.builder().id(emp.getId()).name(emp.getName()).address(emp.getAddress())
+                .build();
+
+        log.info("Employee details : {}", employeeDTO);
+        return employeeDTO;
     }
 }
