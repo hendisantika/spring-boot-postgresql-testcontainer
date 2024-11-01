@@ -1,10 +1,14 @@
 package id.my.hendisantika.postgresqltestcontainer.service;
 
 import id.my.hendisantika.postgresqltestcontainer.repository.EmployeeRepository;
+import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
+import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,5 +26,14 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final ObservationRegistry registry;
+
+    /**
+     * @return
+     */
+    public List<EmployeeDTO> employees() {
+//		return repository.findAll().stream().map(EmployeeUtil::mapToEmployeeDTO).toList();
+        return Observation.createNotStarted("getEmployees", registry)
+                .observe(() -> employeeRepository.findAll().stream().map(Utililty::mapToEmployeeDTO).toList());
+    }
 
 }
