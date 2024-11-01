@@ -1,6 +1,6 @@
 DROP TABLE if EXISTS employee_tbl;
 
-CREATE TABLE employee_tbl
+CREATE TABLE employees
 (
     empid   int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     ename   varchar(50),
@@ -9,7 +9,7 @@ CREATE TABLE employee_tbl
 
 DROP TABLE if EXISTS user_info_tbl;
 
-CREATE TABLE user_info_tbl
+CREATE TABLE user_info
 (
     id       int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name     varchar(50),
