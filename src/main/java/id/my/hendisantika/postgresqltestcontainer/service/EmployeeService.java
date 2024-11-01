@@ -47,7 +47,7 @@ public class EmployeeService {
 //		return EmployeeUtil.mapToEmployeeDTO(repository.save(employee));
 
         return Observation.createNotStarted("saveEmployee", registry)
-                .observe(() -> Utililty.mapToEmployeeDTO(repository.save(employee)));
+                .observe(() -> Utililty.mapToEmployeeDTO(employeeRepository.save(employee)));
     }
 
     /**
@@ -55,8 +55,8 @@ public class EmployeeService {
      * @return
      */
     public String delete(Integer empId) {
-        Employee employee = repository.findById(empId).orElseThrow(() -> Utililty.notFound(empId));
-        repository.delete(employee);
+        Employee employee = employeeRepository.findById(empId).orElseThrow(() -> Utililty.notFound(empId));
+        employeeRepository.delete(employee);
         return "Employee with id=" + empId + " removed";
     }
 
@@ -64,10 +64,10 @@ public class EmployeeService {
      * @return
      */
     public String deleteAll() {
-        List<Employee> employees = repository.findAll();
+        List<Employee> employees = employeeRepository.findAll();
         if (employees.isEmpty())
             return "No employees available";
-        repository.deleteAll();
+        employeeRepository.deleteAll();
         return "All employees are removed.";
     }
 
@@ -76,9 +76,27 @@ public class EmployeeService {
      * @return
      */
     public EmployeeDTO employee(Integer empId) {
-//		Employee employee = repository.findById(empId).orElseThrow(() -> EmployeeUtil.notFound(empId));
+//		Employee employee = employeeRepository.findById(empId).orElseThrow(() -> EmployeeUtil.notFound(empId));
 //		return EmployeeUtil.mapToEmployeeDTO(employee);
         return Observation.createNotStarted("getEmployee", registry).observe(() -> Utililty
-                .mapToEmployeeDTO(repository.findById(empId).orElseThrow(() -> Utililty.notFound(empId))));
+                .mapToEmployeeDTO(employeeRepository.findById(empId).orElseThrow(() -> Utililty.notFound(empId))));
     }
+
+    /**
+     * @param emp
+     * @return
+     */
+    public EmployeeDTO update(EmployeeRequest emp) {
+        Employee employee = employeeRepository.findById(emp.getId()).orElseThrow(() -> Utililty.notFound(emp.getId()));
+
+        employee.setId(emp.getId());
+        employee.setName(emp.getName());
+        employee.setAddress(emp.getAddress());
+
+//		return EmployeeUtil.mapToEmployeeDTO(employeeRepository.save(employee));
+
+        return Observation.createNotStarted("updateEmployee", registry)
+                .observe(() -> Utililty.mapToEmployeeDTO(employeeRepository.save(employee)));
+    }
+
 }
