@@ -5,7 +5,10 @@ import id.my.hendisantika.postgresqltestcontainer.repository.EmployeeRepository;
 import id.my.hendisantika.postgresqltestcontainer.repository.UserInfoRepository;
 import id.my.hendisantika.postgresqltestcontainer.request.EmployeeRequest;
 import id.my.hendisantika.postgresqltestcontainer.request.UserInfoRequest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -81,4 +84,10 @@ class SpringBootPostgresqlTestcontainerApplicationTests {
         dynamicPropertyRegistry.add("spring.datasource.password", postgreSQLContainer::getPassword);
     }
 
+    @Test
+    @Order(value = 1)
+    void testConnectionToDatabase() {
+        Assertions.assertNotNull(employeeRepository);
+        Assertions.assertNotNull(userInfoRepository);
+    }
 }
