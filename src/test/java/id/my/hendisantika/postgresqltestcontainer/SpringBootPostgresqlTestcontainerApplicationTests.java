@@ -177,4 +177,11 @@ class SpringBootPostgresqlTestcontainerApplicationTests {
         }
         Assertions.assertEquals(3, userInfoRepository.findAll().size());
     }
+
+    @Test
+    void testGetUserByUsername() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/user")).andExpect(status().isOk());
+        Assertions.assertEquals(users.get(1).getName(),
+                userInfoRepository.findByEmail("user@gmail.com").get().getName());
+    }
 }
