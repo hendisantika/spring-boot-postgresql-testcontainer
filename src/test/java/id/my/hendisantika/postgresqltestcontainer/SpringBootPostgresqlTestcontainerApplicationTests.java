@@ -1,6 +1,7 @@
 package id.my.hendisantika.postgresqltestcontainer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import id.my.hendisantika.postgresqltestcontainer.entity.Employee;
 import id.my.hendisantika.postgresqltestcontainer.repository.EmployeeRepository;
 import id.my.hendisantika.postgresqltestcontainer.repository.UserInfoRepository;
 import id.my.hendisantika.postgresqltestcontainer.request.EmployeeRequest;
@@ -146,4 +147,15 @@ class SpringBootPostgresqlTestcontainerApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/employees/2")).andExpect(status().isOk());
     }
 
+    @Test
+    @Order(value = 8)
+    @WithMockUser(username = "admin@gmail.com", roles = {"USER", "ADMIN"})
+    void testUpdateEmployee() throws Exception {
+        Employee employee = Employee.builder().id(3).name("Saurav Kumar Shah").address("India East").build();
+        String emp = objectMapper.writeValueAsString(employee);
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put("/api/v1/employees").contentType(MediaType.APPLICATION_JSON).content(emp))
+                .andExpect(status().isOk());
+        Assertions.assertEquals(employee.getName(), employeeRepository.findById(3).get().getName());
+    }
 }
