@@ -1,1 +1,26 @@
 services:
+  postgres17:
+    image: postgres:17-alpine3.20
+    container_name: postgres17
+    environment:
+      POSTGRES_DB: userDB
+      POSTGRES_USER: hendisantika
+      POSTGRES_PASSWORD: 53cret
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres17_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:8.11.0
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@bookstore.com
+      PGADMIN_DEFAULT_PASSWORD: 53cret
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres17
+
+volumes:
+  postgres_data:
