@@ -166,4 +166,15 @@ class SpringBootPostgresqlTestcontainerApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/employees")).andExpect(status().isOk());
         Assertions.assertEquals(0, employeeRepository.findAll().size());
     }
+
+    @Test
+    void testAddUsers() throws Exception {
+        for (UserInfoRequest user : users) {
+            String usr = objectMapper.writeValueAsString(user);
+            mockMvc.perform(
+                            MockMvcRequestBuilders.post("/api/v1/user").contentType(MediaType.APPLICATION_JSON).content(usr))
+                    .andExpect(status().isCreated());
+        }
+        Assertions.assertEquals(3, userInfoRepository.findAll().size());
+    }
 }
