@@ -1,12 +1,13 @@
 package id.my.hendisantika.postgresqltestcontainer.service;
 
+import id.my.hendisantika.postgresqltestcontainer.config.UserInfoUserDetails;
 import id.my.hendisantika.postgresqltestcontainer.entity.UserInfo;
 import id.my.hendisantika.postgresqltestcontainer.repository.UserInfoRepository;
 import id.my.hendisantika.postgresqltestcontainer.request.UserInfoRequest;
 import id.my.hendisantika.postgresqltestcontainer.response.UserInfoDTO;
+import id.my.hendisantika.postgresqltestcontainer.util.Utility;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -28,21 +29,23 @@ import java.util.Optional;
  * To change this template use File | Settings | File Templates.
  */
 @Component
-@RequiredArgsConstructor(onConstructor_ = {@Autowired})
 public class UserInfoService implements UserDetailsService {
 
-    private final UserInfoRepository userInfoRepository;
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
-    private final PasswordEncoder encoder;
+    @Autowired
+    private PasswordEncoder encoder;
 
-    private final ObservationRegistry registry;
+    @Autowired
+    private ObservationRegistry registry;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<UserInfo> userInfo = userInfoRepository.findByEmail(username);
 
         return userInfo.map(UserInfoUserDetails::new)
-                .orElseThrow(() -> Utililty.usernameNotFoundException("Given user not found : " + username));
+                .orElseThrow(() -> Utility.usernameNotFoundException("Given user not found : " + username));
     }
 
     public UserInfoDTO addUser(UserInfoRequest userInfoRequest) {
@@ -54,12 +57,12 @@ public class UserInfoService implements UserDetailsService {
 //		return userInfoRepository.save(userInfo);
 
         return Observation.createNotStarted("addUser", registry)
-                .observe(() -> Utililty.mapToUserInfoDTO(userInfoRepository.save(userInfo)));
+                .observe(() -> Utility.mapToUserInfoDTO(userInfoRepository.save(userInfo)));
     }
 
     public List<UserInfoDTO> users() {
 //		return userInfoRepository.findAll();
         return Observation.createNotStarted("getUsers", registry)
-                .observe(() -> userInfoRepository.findAll().stream().map(Utililty::mapToUserInfoDTO).toList());
+                .observe(() -> userInfoRepository.findAll().stream().map(Utility::mapToUserInfoDTO).toList());
     }
 }

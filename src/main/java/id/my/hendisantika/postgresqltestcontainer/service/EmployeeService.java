@@ -4,6 +4,7 @@ import id.my.hendisantika.postgresqltestcontainer.entity.Employee;
 import id.my.hendisantika.postgresqltestcontainer.repository.EmployeeRepository;
 import id.my.hendisantika.postgresqltestcontainer.request.EmployeeRequest;
 import id.my.hendisantika.postgresqltestcontainer.response.EmployeeDTO;
+import id.my.hendisantika.postgresqltestcontainer.util.Utility;
 import io.micrometer.observation.Observation;
 import io.micrometer.observation.ObservationRegistry;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class EmployeeService {
     public List<EmployeeDTO> employees() {
 //		return repository.findAll().stream().map(EmployeeUtil::mapToEmployeeDTO).toList();
         return Observation.createNotStarted("getEmployees", registry)
-                .observe(() -> employeeRepository.findAll().stream().map(Utililty::mapToEmployeeDTO).toList());
+                .observe(() -> employeeRepository.findAll().stream().map(Utility::mapToEmployeeDTO).toList());
     }
 
     /**
@@ -47,7 +48,7 @@ public class EmployeeService {
 //		return EmployeeUtil.mapToEmployeeDTO(repository.save(employee));
 
         return Observation.createNotStarted("saveEmployee", registry)
-                .observe(() -> Utililty.mapToEmployeeDTO(employeeRepository.save(employee)));
+                .observe(() -> Utility.mapToEmployeeDTO(employeeRepository.save(employee)));
     }
 
     /**
@@ -55,7 +56,7 @@ public class EmployeeService {
      * @return
      */
     public String delete(Integer empId) {
-        Employee employee = employeeRepository.findById(empId).orElseThrow(() -> Utililty.notFound(empId));
+        Employee employee = employeeRepository.findById(empId).orElseThrow(() -> Utility.notFound(empId));
         employeeRepository.delete(employee);
         return "Employee with id=" + empId + " removed";
     }
@@ -78,8 +79,8 @@ public class EmployeeService {
     public EmployeeDTO employee(Integer empId) {
 //		Employee employee = employeeRepository.findById(empId).orElseThrow(() -> EmployeeUtil.notFound(empId));
 //		return EmployeeUtil.mapToEmployeeDTO(employee);
-        return Observation.createNotStarted("getEmployee", registry).observe(() -> Utililty
-                .mapToEmployeeDTO(employeeRepository.findById(empId).orElseThrow(() -> Utililty.notFound(empId))));
+        return Observation.createNotStarted("getEmployee", registry).observe(() -> Utility
+                .mapToEmployeeDTO(employeeRepository.findById(empId).orElseThrow(() -> Utility.notFound(empId))));
     }
 
     /**
@@ -87,7 +88,7 @@ public class EmployeeService {
      * @return
      */
     public EmployeeDTO update(EmployeeRequest emp) {
-        Employee employee = employeeRepository.findById(emp.getId()).orElseThrow(() -> Utililty.notFound(emp.getId()));
+        Employee employee = employeeRepository.findById(emp.getId()).orElseThrow(() -> Utility.notFound(emp.getId()));
 
         employee.setId(emp.getId());
         employee.setName(emp.getName());
@@ -96,7 +97,7 @@ public class EmployeeService {
 //		return EmployeeUtil.mapToEmployeeDTO(employeeRepository.save(employee));
 
         return Observation.createNotStarted("updateEmployee", registry)
-                .observe(() -> Utililty.mapToEmployeeDTO(employeeRepository.save(employee)));
+                .observe(() -> Utility.mapToEmployeeDTO(employeeRepository.save(employee)));
     }
 
 }
