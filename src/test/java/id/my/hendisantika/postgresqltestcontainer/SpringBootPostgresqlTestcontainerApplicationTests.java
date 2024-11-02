@@ -138,4 +138,12 @@ class SpringBootPostgresqlTestcontainerApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/employees/2")).andExpect(status().isForbidden());
         Assertions.assertEquals(employees.get(1).getName(), employeeRepository.findById(2).get().getName());
     }
+
+    @Test
+    @Order(value = 7)
+    @WithMockUser(username = "admin@gmail.com", roles = {"USER", "ADMIN"})
+    void testDeleteEmployeeById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/api/v1/employees/2")).andExpect(status().isOk());
+    }
+
 }
