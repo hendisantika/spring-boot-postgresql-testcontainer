@@ -130,4 +130,12 @@ class SpringBootPostgresqlTestcontainerApplicationTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/employees/2")).andExpect(status().isOk());
         Assertions.assertEquals(employees.get(1).getName(), employeeRepository.findById(2).get().getName());
     }
+
+    @Test
+    @Order(value = 6)
+    @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN"})
+    void testGetEmployeeByIdFailed() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/employees/2")).andExpect(status().isForbidden());
+        Assertions.assertEquals(employees.get(1).getName(), employeeRepository.findById(2).get().getName());
+    }
 }
