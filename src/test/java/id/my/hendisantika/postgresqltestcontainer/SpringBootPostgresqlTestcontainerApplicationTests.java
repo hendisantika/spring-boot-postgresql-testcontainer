@@ -1,6 +1,5 @@
 package id.my.hendisantika.postgresqltestcontainer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import id.my.hendisantika.postgresqltestcontainer.entity.Employee;
 import id.my.hendisantika.postgresqltestcontainer.repository.EmployeeRepository;
 import id.my.hendisantika.postgresqltestcontainer.repository.UserInfoRepository;
@@ -12,17 +11,18 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ class SpringBootPostgresqlTestcontainerApplicationTests {
     private final static List<EmployeeRequest> employees = new ArrayList<>();
     private final static List<UserInfoRequest> users = new ArrayList<>();
     @Container
-    private static final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:17-alpine3.20")
+    private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:18-alpine")
             .withDatabaseName("integration-tests-db").withUsername("username").withPassword("password")
             .withInitScript("test-data.sql");
 
